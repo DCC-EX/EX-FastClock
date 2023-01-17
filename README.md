@@ -88,9 +88,8 @@ To indicate which mode is in use it is necessary to edit the config.h file.
 3. I2C mode
 	To operate in I2C mode edit the config.h file and uncomment the following lines
 
-	`#define I2CAddress 0x55 // default I2C address
-	
-	#define SEND_VIA_I2C true`
+	`#define I2CAddress 0x55 // default I2C address`
+	`#define SEND_VIA_I2C true`
 
 	In this mode the CS will poll the FastClock to obtain the time.  It is necessary to set the same I2C address here as used in the myHal.cpp file within the CS.  This is set to a default of 0x55 (decimal 85) but can be set to some other value if this conflicts with othere I2C devices on your setup.
 
