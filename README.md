@@ -80,22 +80,30 @@ To indicate which mode is in use it is necessary to edit the config.h file.
 
 2. Serial Mode.
 	To communicatein Serial mode it is necessary to edit the config.h file and uncomment the following line:
+
 	`#define SEND_VIA_SERIAL true`
+
 	This will load the appropriate code including the Wire library.
 
 3. I2C mode
 	To operate in I2C mode edit the config.h file and uncomment the following lines
+
 	`#define I2CAddress 0x55 // default I2C address
 	#define SEND_VIA_I2C true`
+
 	In this mode the CS will poll the FastClock to obtain the time.  It is necessary to set the same I2C address here as used in the myHal.cpp file within the CS.  This is set to a default of 0x55 (decimal 85) but can be set to some other value if this conflicts with othere I2C devices on your setup.
 
 
 The operating speeds of the clock can be controlled by modifying the following line:
+
 `byte clockSpeeds[] = {1, 2, 4, 6, 8, 12, 30};  //  Fast Clock Speeds`
+
 See the notes in the config.h file.
 
 Finally the default speed of the clock at startup is controlled by the line:
+
 `byte clockSpeed = 4;`
+
 which may be modified as required but must correspond to one of the clockspeeds in the array defined above.
 
 
