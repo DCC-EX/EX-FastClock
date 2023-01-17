@@ -7,7 +7,7 @@
 //#define SEND_VIA_I2C true
 
 // If we are sending the data to the CS via Serial then uncomment the following line
-#define SEND_VIA_SERIAL true
+//#define SEND_VIA_SERIAL true
 
 // The following line governs the clock speeds availavle for selection
 // Clockspeed of 1 = real time

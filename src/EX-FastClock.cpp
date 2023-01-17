@@ -43,7 +43,7 @@
  */
 
 
-#include "Fast_Clock.h"
+#include "EX-FastClock.h"
 //#include "stdio.h"
 
 // only load the wire library if we transmit to CS
