@@ -1,0 +1,13 @@
+MCUFRIEND_kbv ID=0x6809  240 x 320
+
+const int XP=7,XM=A1,YP=A2,YM=6; //240x320 ID=0x6809
+const int TS_LEFT=917,TS_RT=134,TS_TOP=122,TS_BOT=903;
+PORTRAIT CALIBRATION     240 x 320
+x = map(p.x, LEFT=917, RT=134, 0, 240)
+y = map(p.y, TOP=122, BOT=903, 0, 320)
+Touch Pin Wiring XP=7 XM=A1 YP=A2 YM=6
+LANDSCAPE CALIBRATION    320 x 240
+x = map(p.y, LEFT=122, RT=903, 0, 320)
+y = map(p.x, TOP=134, BOT=917, 0, 240)
+TFT ID = 0x6809
+Calibrate for your Touch Panel
