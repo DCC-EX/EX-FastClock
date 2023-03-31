@@ -26,7 +26,8 @@ const int TS_LEFT = 123, TS_RT = 923, TS_TOP = 895, TS_BOT = 98; // for Portrait
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
 
 // Define the operating buttons
-Adafruit_GFX_Button btn1, btn2, btn3, btn4, btn5, btn6;
+//Adafruit_GFX_Button btn1, btn2, btn3, btn4, btn5, btn6;
+Adafruit_GFX_Button key[6];
 
 int pixel_x, pixel_y;     //Touch_getXY() updates global vars
 

@@ -43,7 +43,7 @@
  */
 
 
-#include "EX-FastClock.h"
+#include "Fast_Clock.h"
 //#include "stdio.h"
 
 // only load the wire library if we transmit to CS
@@ -53,12 +53,14 @@
 
 MCUFRIEND_kbv tft;  // set up a tft instance with the MCUFRIEND drivers
 
+
 // Load the special font for the clock display - 24 point wont load
 // This is a converted Arial Truetype font with characters 0 - 9 & :
 #include <Fonts/Arial48pt7b.h>
 #include <Fonts/Arial9pt7b.h>
 
-void showmsgXY(byte x, byte y, byte sz, char colour, const char *msg)
+//void showmsgXY(byte x, byte y, byte sz, char colour, const char *msg)
+void showmsgXY(byte x, byte y, byte sz, char colour, char *msg)
 {
     tft.setFont();
     tft.setFont(&Arial9pt7b);
@@ -99,25 +101,30 @@ void TFT_Begin()
 
 }
 
+
 void DrawButtons()
 {
 
     tft.setFont();  // Set the default font
 
     //Serial.println("Defining Buttons");
-    btn1.initButton(&tft,  40, 220, 70, 40, WHITE, GREEN, WHITE, "Start", 2);
-    btn2.initButton(&tft,  120, 220, 70, 40, WHITE, RED, WHITE, "Save", 2);
-    btn3.initButton(&tft,  200, 220, 70, 40, WHITE, CYAN, BLACK, "Reset", 2);
-    btn4.initButton(&tft,  40, 270, 70, 40, WHITE, CYAN, BLACK, "T+", 2);
-    btn5.initButton(&tft,  120, 270, 70, 40, WHITE, CYAN, BLACK, "T-", 2);
-    btn6.initButton(&tft,  200, 270, 70, 40, WHITE, CYAN, BLACK, "Rate", 2); 
+    key[0].initButton(&tft,  40, 220, 70, 40, WHITE, GREEN, WHITE, "Start", 2);
+    
+    key[1].initButton(&tft,  120, 220, 70, 40, WHITE, RED, WHITE, "Save", 2);
+    
+    key[2].initButton(&tft,  200, 220, 70, 40, WHITE, CYAN, BLACK, "Reset", 2);
+    
+    key[3].initButton(&tft,  40, 270, 70, 40, WHITE, CYAN, BLACK, "T+", 2);
+    
+    key[4].initButton(&tft,  120, 270, 70, 40, WHITE, CYAN, BLACK, "T-", 2);
+    
+    key[5].initButton(&tft,  200, 270, 70, 40, WHITE, CYAN, BLACK, "Rate", 2); 
+    
 
-    btn1.drawButton(false);
-    btn2.drawButton(false);
-    btn3.drawButton(false);
-    btn4.drawButton(false);
-    btn5.drawButton(false);
-    btn6.drawButton(false);
+    for (byte x = 0; x < 6; x++) {
+      key[x].drawButton(false);
+      delay(10);    // Seem to need a slight pause
+    }
   
 } 
 
@@ -176,57 +183,16 @@ void CheckButtons()
 
     bool down = Touch_getXY();
 
-    btn1.press(down && btn1.contains(pixel_x, pixel_y));
-    btn2.press(down && btn2.contains(pixel_x, pixel_y));
-    btn3.press(down && btn3.contains(pixel_x, pixel_y));
-    btn4.press(down && btn4.contains(pixel_x, pixel_y));
-    btn5.press(down && btn5.contains(pixel_x, pixel_y));
-    btn6.press(down && btn6.contains(pixel_x, pixel_y));
-    
-    if (btn1.justReleased()) 
-        btn1.drawButton();
-    if (btn2.justReleased()) 
-        btn2.drawButton();
-    if (btn3.justReleased()) 
-        btn3.drawButton();  
-    if (btn4.justReleased()) 
-        btn4.drawButton();  
-    if (btn5.justReleased()) 
-        btn5.drawButton();  
-    if (btn6.justReleased()) 
-        btn6.drawButton();  
- 
-    if (btn1.justPressed()) {
-      btn1.drawButton(true);
-       ButtonPressed = 1;  // Start/Pause
-      delay(debounceDelay);
+    for (uint8_t b = 0; b < 6; b++){
+      key[b].press(down && key[b].contains(pixel_x, pixel_y));
+      if (key[b].justReleased())
+          key[b].drawButton();
+      if (key[b].justPressed()) {
+          key[b].drawButton(true);
+          ButtonPressed = b + 1;
+          delay(debounceDelay);
+      }
     }
-    if (btn2.justPressed()) {
-      btn2.drawButton(true);
-      ButtonPressed = 2; // Save
-      delay(debounceDelay);
-    }
-    if (btn3.justPressed()) {
-      btn3.drawButton(true);
-      ButtonPressed = 3;   // Reset
-      delay(debounceDelay);
-    }
-   if (btn4.justPressed()) {
-      btn4.drawButton(true);
-      ButtonPressed = 4;      //T+ 
-      delay(debounceDelay);
-    }
-   if (btn5.justPressed()) {
-      btn5.drawButton(true);
-      ButtonPressed = 5;      //T-
-      delay(debounceDelay);
-    }
-    if (btn6.justPressed()) {
-      btn6.drawButton(true);
-      ButtonPressed = 6;      // Rate
-      delay(debounceDelay);
-    }
-  
   
 }
 
@@ -234,10 +200,12 @@ void CheckButtons()
 void SendTime(byte hour, byte mins, byte speed) {
 
   int itime = (hour * 60) + mins;
-  //String buffer[20] = "<JC ", itime, " ", speed, ">\0";
-  char buffer[20];
-  sprintf(buffer, "<JC %d %d>", itime, speed);
-  Serial.println(buffer);
+  Serial.print(F("<JC "));
+  Serial.print( itime);
+  Serial.print(F(" "));
+  Serial.print((int)speed);
+  Serial.print(F(">\n"));
+
 }
 
 #endif
@@ -294,26 +262,8 @@ void TimeCheck() {
           Minute += ":";
         }
 
-    // Ss = ((startTime + runTime) % milPerHr) / milPerSec;
-
-    // if (Ss > 59) 
-    //     {
-    //       SM = (Ss / 60);
-    //       Ss = (Ss - ( 60 * SM)); 
-    //     }
-      
-    // if (Ss <= 9)
-    //     {
-    //       Second = "0";
-    //       Second.concat(Ss);
-    //     }  
-    //   else 
-    //     {
-    //       Second = (Ss);
-    //     }   
-
     Time = Time += Hour += MinuteS += '\0';  //  Add null for dispaly
-    //TimeP = Hour += Minute += Second;  
+      
     Time.toCharArray(message, 8);
 
 }
@@ -362,16 +312,16 @@ if (pausePlay == true)                   //  Clock paused
         Pause.toCharArray(message, 6);
         showmsgXY(55, 160, 2, YELLOW, "PAUSED");
         tft.setFont();
-        btn1.initButton(&tft,  40, 220, 70, 40, WHITE, GREEN, WHITE, "Start", 2);
-        btn1.drawButton(false);
+        key[0].initButton(&tft,  40, 220, 70, 40, WHITE, GREEN, WHITE, "Start", 2);
+        key[0].drawButton(false);
       }   
 
 else  
     {
         tft.setFont();
         tft.fillRect(1, 135, 235, 30, BLACK);
-        btn1.initButton(&tft,  40, 220, 70, 40, WHITE, CYAN, BLACK, "Pause", 2);
-        btn1.drawButton(false);
+        key[0].initButton(&tft,  40, 220, 70, 40, WHITE, CYAN, BLACK, "Pause", 2);
+        key[0].drawButton(false);
     
         #ifdef SEND_VIA_SERIAL
           //SendTime(HH, MM, clockSpeed);
