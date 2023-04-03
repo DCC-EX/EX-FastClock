@@ -143,6 +143,10 @@ void printClock(char *Msg)
     //Serial.println(Msg);
 
     tft.print(Msg);
+    //tft.print(HH);
+    //delay(1000);
+   // tft.setCursor(100,100);
+    //tft.print(MM);
     tft.drawFastHLine(0, 120, tft.width(), WHITE);
 
 }
@@ -219,26 +223,26 @@ void TimeCheck() {
           HD = (HH / 24);
           HH = (HH - (24 * HD)); 
         }     
-    if (HH <= 9)
-        {
-          Time = " ";
-          Hour = "0";
-          Hour.concat(HH);
-          Hour += ":";
-        }  
-      else 
-        {
-          Hour = (HH);
-          Hour += ":";
-        }
-     if ((HH >= 10) && (HH < 20)) 
-        {
-          Time = "  ";
-        }
-    if (HH >= 20) 
-        {
-          Time = " ";
-        }
+    // if (HH <= 9)
+    //     {
+    //       Time = " ";
+    //       Hour = "0";
+    //       Hour.concat(HH);
+    //       Hour += ":";
+    //     }  
+    //   else 
+    //     {
+    //       Hour = (HH);
+    //       Hour += ":";
+    //     }
+    //  if ((HH >= 10) && (HH < 20)) 
+    //     {
+    //       Time = "  ";
+    //     }
+    // if (HH >= 20) 
+    //     {
+    //       Time = " ";
+    //     }
         
       MM = ((startTime + runTime) % milPerHr) / milPerMin;
 
@@ -248,23 +252,29 @@ void TimeCheck() {
           MM = (MM - ( 60 * MH)); 
         }
 
-    if (MM <= 9)
-        {
-          Minute = "0";
-          Minute.concat(MM);
-          MinuteS = (Minute);
-          Minute += ":";
-        }  
-    else 
-        {
-          Minute = (MM);
-          MinuteS = (Minute);
-          Minute += ":";
-        }
+    // if (MM <= 9)
+    //     {
+    //       Minute = "0";
+    //       Minute.concat(MM);
+    //       MinuteS = (Minute);
+    //       Minute += ":";
+    //     }  
+    // else 
+    //     {
+    //       Minute = (MM);
+    //       MinuteS = (Minute);
+    //       Minute += ":";
+    //     }
 
-    Time = Time += Hour += MinuteS += '\0';  //  Add null for dispaly
+    //Time = Time += Hour += MinuteS += '\0';  //  Add null for dispaly
       
-    Time.toCharArray(message, 8);
+    //sprintf(message,"%02d:%02d", HH, MM);
+    message[0] = '0' + HH/10;
+message[1] = '0' + HH%10;
+message[2] = ':';
+message[3] = '0' + MM/10;
+message[4] = '0' + MM%10;
+message[5] = 0;
 
 }
 
@@ -307,9 +317,9 @@ pausePlay = !pausePlay;
 
 if (pausePlay == true)                   //  Clock paused
       {
-        Pause = "Pause";
-        Pause = Pause += '\0';
-        Pause.toCharArray(message, 6);
+        //Pause = "Pause";
+        //Pause = Pause += '\0';
+        //Pause.toCharArray(message, 6);
         showmsgXY(55, 160, 2, YELLOW, "PAUSED");
         tft.setFont();
         key[0].initButton(&tft,  40, 220, 70, 40, WHITE, GREEN, WHITE, "Start", 2);
@@ -330,24 +340,38 @@ else
 
 }
 
-void TimePlus(){
+void AdjustTime(byte OPT){
 
    if (!pausePlay){
      PauseClock();
     }
           // if runTime is > 2 minutes (120000 millis) adjust runTime if under 2 minutes startTime
           //  Increment by 15 Min "a press"
-        if (runTime > 120000)
-        {
-          runTime = runTime + 900000;
-        } else  {
-          startTime = startTime + 900000;
+        switch (OPT) {
+          case 1:
+            if (runTime > 120000) {
+              runTime = runTime + 900000;
+            } else  {
+              startTime = startTime + 900000;
+            }
+            break;
+          case 2:
+            if (runTime > 120000)
+              {
+                runTime = runTime - 900000;
+              } else  {
+                startTime = startTime - 900000;
+              }
+            break;
+          default:
+            break;
         }
+          
     
         TimeCheck();
 
 
-          printClock(message);
+        printClock(message);
 
           #ifdef SEND_VIA_SERIAL
             //SendTime(HH, MM, clockSpeed);
@@ -355,29 +379,25 @@ void TimePlus(){
 
 }
 
-void TimeMinus(){
+void displaySpeed(byte x) {
 
-  if (!pausePlay){
-     PauseClock();
+   clockSpeed = clockSpeeds[x];
+
+    strcpy(message, "Speed = ");
+    if (clockSpeed < 10) {
+      message[8] = '0' + clockSpeed;
+      message[9] = 0;
+    } else{
+      message[8] = '0' + clockSpeed/10;
+      message[9] = '0' + clockSpeed%10;
+      message[10] = 0;
     }
-  // if runTime is > 2 minutes (120000 millis) adjust runTime if under 2 minutes startTime
-  //  Increment by -15 Min "a press"
-  if (runTime > 120000)
-  {
-    runTime = runTime - 900000;
-  } else  {
-    startTime = startTime - 900000;
-  }
-          
-    TimeCheck();
 
-    printClock(message);
-
-    #ifdef SEND_VIA_SERIAL
-      //SendTime(HH, MM, clockSpeed);
-    #endif        
-
+    tft.fillRect(10, 170, 240, 22, BLACK);
+    showmsgXY(10, 190, 1, YELLOW, message);
+   
 }
+
 
 void AlterRate(){
 
@@ -385,22 +405,14 @@ void AlterRate(){
      PauseClock();
     }
 
-    //Serial.println(counter);
     if (counter < 6)
     {
       counter++;
     } else {
       counter = 0;
     }
+    displaySpeed(counter);
 
-    //Serial.println(counter);
-    clockSpeed = clockSpeeds[counter];
-    Speed = "Speed = ";
-    Speed = Speed +=clockSpeed += '\0';    //  Add null for dispaly
-    Speed.toCharArray(message, 12);
-    tft.fillRect(10, 170, 240, 22, BLACK);
-    showmsgXY(10, 190, 1, YELLOW, message);
-         
     currentMillis = millis();
 
 }
@@ -417,13 +429,7 @@ void ResetAll(){
     runTime = 0;                       //  Reset run time
     LastMinutes = 99;
 
-    clockSpeed = clockSpeeds[counter];
-    Speed = "Speed = ";
-    Speed = Speed +=clockSpeed += '\0';    //  Add null for dispaly
-    Speed.toCharArray(message, 12);
-    
-    tft.fillRect(10, 170, 240, 22, BLACK);
-    showmsgXY(10, 190, 1, YELLOW, message);
+    displaySpeed(counter);
 
     CheckClockTime();           // display the time
   
@@ -518,17 +524,10 @@ void setup()
   TFT_Begin();
     
   DrawButtons();
-  
  
   GetSavedTime();               // Read the EEPROM
 
-  clockSpeed = clockSpeeds[counter];
-          Speed = "Speed = ";
-          Speed = Speed +=clockSpeed += '\0';    //  Add null for dispaly
-          Speed.toCharArray(message, 12);
-          //printText(message);
-          tft.fillRect(10, 170, 240, 22, BLACK);
-          showmsgXY(10, 190, 1, YELLOW, message);
+  displaySpeed(counter);
 
   CheckClockTime();
 
@@ -575,12 +574,12 @@ void loop()
       break;
 
     case 4:
-        TimePlus();
+        AdjustTime(1); // add time
         PrintButton();
       break;
 
     case 5:
-        TimeMinus();
+        AdjustTime(2); // deduct time
         PrintButton();
       break;
 

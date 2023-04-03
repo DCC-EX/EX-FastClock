@@ -68,15 +68,7 @@ byte MM;                           //  Integer Minutes
 byte HD;                           //  number of full Days since conting
 byte MH;                           //  number of full hours since conting
 byte SM;                           //  number of full minutes since conting 
-byte Ss;                           //  Integer Seconds 
-String Time;                      //  Character Hours:Minutes
-String TimeP;                     //  Character Hours:Minutes:Seconds
-String Hour;                      //  Character Hours
-String Minute;                    //  Character Minutes + ":"
-String MinuteS;                   //  Character Minutes
-String Second;                    //  Character Seconds
-String Speed;                     //  Character Speed
-String Pause;                     //  Character Pause
+
 byte LastMinutes = 99;
 
 byte ButtonPressed = 0;
