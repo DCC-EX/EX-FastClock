@@ -14,16 +14,6 @@
 
 #include <SPI.h>
 
-// ALL Touch panels and wiring is DIFFERENT
-// copy-paste results from TouchScreen_Calibr_native.ino
-//These settings are for the McuFriend 2.8" shield
-
-const byte XP = 7, XM = A1, YP = A2, YM = 6;
-
-//const int TS_LEFT = 99, TS_RT = 895, TS_TOP = 122, TS_BOT = 918;  // For Landscape Orientation
-const int TS_LEFT = 123, TS_RT = 923, TS_TOP = 895, TS_BOT = 98; // for Portrait orientation 2
-
-TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
 
 // Define the operating buttons
 //Adafruit_GFX_Button btn1, btn2, btn3, btn4, btn5, btn6;
@@ -45,7 +35,6 @@ int pixel_x, pixel_y;     //Touch_getXY() updates global vars
 // Global message buffers shared by Serial and Scrolling functions
 #define BUF_SIZE  15
 char message[BUF_SIZE] = {"Hello!"};
-//bool newMessageAvailable = true;
 
 
 unsigned long currentMillis = 0;  //  Current Millis value for comparison

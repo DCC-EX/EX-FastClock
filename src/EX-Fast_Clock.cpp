@@ -53,6 +53,7 @@
 
 MCUFRIEND_kbv tft;  // set up a tft instance with the MCUFRIEND drivers
 
+TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
 
 // Load the special font for the clock display - 24 point wont load
 // This is a converted Arial Truetype font with characters 0 - 9 & :
@@ -74,16 +75,6 @@ void showmsgXY(byte x, byte y, byte sz, char colour, char *msg)
 void TFT_Begin()
 {
 
-    // ALL Touch panels and wiring is DIFFERENT
-    // copy-paste results from TouchScreen_Calibr_native.ino
-
-    const byte XP = 7, XM = A1, YP = A2, YM = 6;
-  
-    //const int TS_LEFT = 123, TS_RT = 923, TS_TOP = 895, TS_BOT = 98; // for Portrait orientation 
-    
-
-    TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
-
     uint16_t ID = tft.readID();
     // Serial.print("TFT ID = 0x");
     // Serial.println(ID, HEX);
@@ -95,7 +86,7 @@ void TFT_Begin()
     tft.setRotation(2);           //PORTRAIT
 
     tft.fillScreen(BLACK);
-    showmsgXY(1, 15, 1, YELLOW, "Nantyderry Junction");
+    showmsgXY(1, 15, 1, YELLOW, header);
     tft.drawFastHLine(0, 18, tft.width(), WHITE);
   
 
@@ -139,14 +130,8 @@ void printClock(char *Msg)
     tft.fillRect(1, 30, 235, 90, BLACK);
     tft.setCursor(1,100);
     
-    //Serial.print(" Time:");
-    //Serial.println(Msg);
-
     tft.print(Msg);
-    //tft.print(HH);
-    //delay(1000);
-   // tft.setCursor(100,100);
-    //tft.print(MM);
+    
     tft.drawFastHLine(0, 120, tft.width(), WHITE);
 
 }
@@ -223,26 +208,7 @@ void TimeCheck() {
           HD = (HH / 24);
           HH = (HH - (24 * HD)); 
         }     
-    // if (HH <= 9)
-    //     {
-    //       Time = " ";
-    //       Hour = "0";
-    //       Hour.concat(HH);
-    //       Hour += ":";
-    //     }  
-    //   else 
-    //     {
-    //       Hour = (HH);
-    //       Hour += ":";
-    //     }
-    //  if ((HH >= 10) && (HH < 20)) 
-    //     {
-    //       Time = "  ";
-    //     }
-    // if (HH >= 20) 
-    //     {
-    //       Time = " ";
-    //     }
+ 
         
       MM = ((startTime + runTime) % milPerHr) / milPerMin;
 
@@ -252,29 +218,13 @@ void TimeCheck() {
           MM = (MM - ( 60 * MH)); 
         }
 
-    // if (MM <= 9)
-    //     {
-    //       Minute = "0";
-    //       Minute.concat(MM);
-    //       MinuteS = (Minute);
-    //       Minute += ":";
-    //     }  
-    // else 
-    //     {
-    //       Minute = (MM);
-    //       MinuteS = (Minute);
-    //       Minute += ":";
-    //     }
-
-    //Time = Time += Hour += MinuteS += '\0';  //  Add null for dispaly
-      
-    //sprintf(message,"%02d:%02d", HH, MM);
+  
     message[0] = '0' + HH/10;
-message[1] = '0' + HH%10;
-message[2] = ':';
-message[3] = '0' + MM/10;
-message[4] = '0' + MM%10;
-message[5] = 0;
+    message[1] = '0' + HH%10;
+    message[2] = ':';
+    message[3] = '0' + MM/10;
+    message[4] = '0' + MM%10;
+    message[5] = 0;
 
 }
 
@@ -289,8 +239,6 @@ void CheckClockTime() {
     TimeCheck();
     
   lastMillis = currentMillis;
-  //Serial.print("Routine Cycle ");
-  //Serial.println(message);
 
   if (MM != LastMinutes){
     LastMinutes = MM;
@@ -317,9 +265,7 @@ pausePlay = !pausePlay;
 
 if (pausePlay == true)                   //  Clock paused
       {
-        //Pause = "Pause";
-        //Pause = Pause += '\0';
-        //Pause.toCharArray(message, 6);
+     
         showmsgXY(55, 160, 2, YELLOW, "PAUSED");
         tft.setFont();
         key[0].initButton(&tft,  40, 220, 70, 40, WHITE, GREEN, WHITE, "Start", 2);
