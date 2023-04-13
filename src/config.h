@@ -21,17 +21,18 @@ byte clockSpeeds[] = {1, 2, 4, 6, 8, 12, 30};  //  Fast Clock Speeds
 
 byte clockSpeed = 4;               //  Initial Fast Clock Speed Setting
 
-
-// Global message buffers shared by Serial and Scrolling functions
-// Set this
+// Set this following string to the header you require.
 #define HDDR_SIZE  25
-char header[HDDR_SIZE] = {"Nantyderry Junction!"};
+char header[HDDR_SIZE] = {"Nantyderry Junction"};
 
 // ALL Touch panels and wiring is DIFFERENT
 // copy-paste results from TouchScreen_Calibr_native.ino
 // These settings are for the McuFriend 2.8" shield in Portrait tft.screenRotaion(2)
 
 const byte XP = 7, XM = A1, YP = A2, YM = 6;
+// Orientation 2
+//const int TS_LEFT = 123, TS_RT = 923, TS_TOP = 895, TS_BOT = 98; // for Portrait orientation 2
+// Orientation 0
+const int TS_LEFT=899,TS_RT=122,TS_TOP=100,TS_BOT=898;
 
-const int TS_LEFT = 123, TS_RT = 923, TS_TOP = 895, TS_BOT = 98; // for Portrait orientation 2
-
+#define ORIENTATION 0  // can be set to 0 or 2
