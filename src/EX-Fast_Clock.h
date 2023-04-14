@@ -21,6 +21,19 @@ Adafruit_GFX_Button key[6];
 
 int pixel_x, pixel_y;     //Touch_getXY() updates global vars
 
+// The following line governs the clock speeds available for selection
+// Clockspeed of 1 = real time
+// Clockspeed of 2 = half real time i.e. 1 min equiv. to 30 seconds
+// Clockspeed of 4 = 1/4 real time i.e. 1 min equiv. to 15 seconds
+// etc.
+// These do not need to be changed but could be
+byte clockSpeeds[] = {1, 2, 4, 6, 8, 12, 30};  //  Fast Clock Speeds
+
+// The following line sets the default (startup) speed.
+
+byte clockSpeed = 4;               //  Initial Fast Clock Speed Setting
+
+// Define some colours for the display
 
 #define BLACK   0x0000
 //#define BLUE    0x001F
