@@ -83,7 +83,7 @@ void TFT_Begin()
 
     tft.begin(ID);
   
-    tft.setRotation(2);           //PORTRAIT
+    tft.setRotation(0);           //PORTRAIT
 
     tft.fillScreen(BLACK);
     showmsgXY(1, 15, 1, YELLOW, header);
