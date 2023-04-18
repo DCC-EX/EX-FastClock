@@ -43,7 +43,7 @@ If using Serial communication no modification is required. Pins 0 & 1 (TX/RX) ar
 
 ## Installation Notes
 
-The MCUFRIEND style shield used in this project is usually a cheap(ish) import from China.  These come with a variety of processor chips and various tolerances on the touch screen.  As such before use it is necessary to carry out a calibration routine.  Details of how to carry this out are provided [here](CALIBRATION.mdC:/Users/Colin/Documents/ADevCode/GitHub/EX-FastClock/EX-FastClock/README.md).
+The MCUFRIEND style shield used in this project is usually a cheap(ish) import from China.  These come with a variety of processor chips and various tolerances on the touch screen.  As such before use it is necessary to carry out a calibration routine.  Details of how to carry this out are provided [here](CALIBRATION.md).
 
 Once the calibration has been carried out plug the shield into the UNO and you are ready to install the software.  If you need assistance see the instructions [here](INSTALLATION.md).
 
