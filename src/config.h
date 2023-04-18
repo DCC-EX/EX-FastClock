@@ -9,7 +9,7 @@
 //#define SEND_VIA_I2C true
 
 // If we are sending the data to the CS via Serial then uncomment the following line
-#define SEND_VIA_SERIAL true
+//#define SEND_VIA_SERIAL true
 
 
 // Set this following string to the header you require.  This is displayed at the top of the screen
