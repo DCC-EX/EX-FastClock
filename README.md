@@ -62,7 +62,7 @@ Once the file has downloaded, select the file in Windows Explorer to see the lis
 
 Create a folder within your Arduino sletches folder called EX-Fast_Clock.  Copy the files from the root folder to a folder called EX-Fast_Clock folder just created.  
 
-The project requires three libraries - Adafruit_GFX, Adafruit_Touchscreen and MCUFRIEND_kbv.  All three cn be installed from the Arduino IDE library manager.  However copies of the libraries used in this project can be found in the Libraries within the zip file. These folder should be copied into your normal libraries folder within the Arduino folder.
+The project requires three libraries - Adafruit_GFX, Adafruit_Touchscreen and MCUFRIEND_kbv.  All three can be installed from the Arduino IDE library manager.  However copies of the libraries used in this project can be found in the Libraries folder within the zip file. These folders should be copied into your normal libraries folder within the Arduino folder.
 
 I have also generated two special fonts for the project which can be found in the main folder in this repository.  The file Arial9pt7b.h congtains a fullset of the Arial Font as used in Windows.  The file Arial48pt7b.h contains a large 48pt Arial font containing only characters 0-9 and :.  This is used to display the time clock on the screen.  The full font was too large to fit into the Uno memory.
 
