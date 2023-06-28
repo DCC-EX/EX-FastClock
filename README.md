@@ -54,9 +54,9 @@ The clock will start in a paused state and will display the speed rate factor (d
 ## Installation Notes
 
 The easiest way to download this version of the software from the Github Repository is as follows:
-	Navigate to the Arduino IDE Branch
-	Click on the green CODE button
-	Select the Download ZIP option
+* Navigate to the Arduino IDE Branch
+* Click on the green CODE button
+* Select the Download ZIP option
 
 Once the file has downloaded, select the file in Windows Explorer to see the list of files.
 
