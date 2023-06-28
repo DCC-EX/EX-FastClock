@@ -57,8 +57,8 @@ TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
 
 // Load the special font for the clock display - 24 point wont load
 // This is a converted Arial Truetype font with characters 0 - 9 & :
-#include <Fonts/Arial48pt7b.h>
-#include <Fonts/Arial9pt7b.h>
+#include "Arial48pt7b.h"
+#include "Fonts/Arial9pt7b.h"
 
 //void showmsgXY(byte x, byte y, byte sz, char colour, const char *msg)
 void showmsgXY(byte x, byte y, byte sz, char colour, char *msg)

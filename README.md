@@ -53,11 +53,20 @@ The clock will start in a paused state and will display the speed rate factor (d
 
 ## Installation Notes
 
-The project requires three libraries - Adafruit_GFX, Adafruit_Touchscreen and MCUFRIEND_kbv.  All three cn be installed from the Arduino IDE library manager.  Copies of these may be found in the .pio/libdeps/uno folder.
+The easiest way to download this version of the software from the Github Repository is as follows:
+	Navigate to the Arduino IDE Branch
+	Click on the green CODE button
+	Select the Download ZIP option
 
-I have also generated two special fonts for the project which can be found in the Fonts folder in the Adafruit GFX Library in this repository.  These should be copied into the fonts folder in the Adafruit_GFX library once installed. The file Arial9pt7b.h congtains a fullset of the Arial Font as used in Windows.  The file Arial48pt7b.h contains a large 48pt Arial font containing only charachters 0-9 and :.  This is used to display the time clock on the screen.  The full font was too large to fit into the Uno memory.
+Once the file has downloaded, select the file in Windows Explorer to see the list of files.
 
-The files within this repository are held in VSCode format.  If using Arduino IDE, copy the files from the src folder to a folder called EX-FastClock within your Arduino folder and rename the EX_FastClock.cpp to EX-FastClock.ino.  The copy the libraries from .pio/libdeps/uno into your libraries folder.
+Create a folder within your Arduino sletches folder called EX-Fast_Clock.  Copy the files from the root folder to a folder called EX-Fast_Clock folder just created.  
+
+The project requires three libraries - Adafruit_GFX, Adafruit_Touchscreen and MCUFRIEND_kbv.  All three cn be installed from the Arduino IDE library manager.  However copies of the libraries used in this project can be found in the Libraries within the zip file. These folder should be copied into your normal libraries folder within the Arduino folder.
+
+I have also generated two special fonts for the project which can be found in the main folder in this repository.  The file Arial9pt7b.h congtains a fullset of the Arial Font as used in Windows.  The file Arial48pt7b.h contains a large 48pt Arial font containing only characters 0-9 and :.  This is used to display the time clock on the screen.  The full font was too large to fit into the Uno memory.
+
+
 
 
 ## Configuration Notes
@@ -72,7 +81,7 @@ To indicate which mode is in use it is necessary to edit the config.h file.
 
 
 1. Standalone use.
-	The config.h file comes pre-configured to use the clock innstandalone mode.  No changes are necessary.
+	The config.h file comes pre-configured to use the clock in standalone mode.  No changes are necessary.
 
 2. Serial Mode.
 	To communicatein Serial mode it is necessary to edit the config.h file and uncomment the following line:
