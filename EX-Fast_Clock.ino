@@ -58,7 +58,7 @@ TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
 // Load the special font for the clock display - 24 point wont load
 // This is a converted Arial Truetype font with characters 0 - 9 & :
 #include "Arial48pt7b.h"
-#include "Fonts/Arial9pt7b.h"
+#include "Arial9pt7b.h"
 
 //void showmsgXY(byte x, byte y, byte sz, char colour, const char *msg)
 void showmsgXY(byte x, byte y, byte sz, char colour, char *msg)
@@ -432,6 +432,14 @@ void PrintButton(){
 
 #ifdef SEND_VIA_I2C
 void TransmitTime() {
+        // Check how often the CPU is calling for the time
+        long thiscall = (millis() - timestamp);
+        Serial.print)"Time between calls - ";
+        
+      
+      
+    
+  
         // send the data over I2C
         // send the time as <mmmm> as two bytes followed by clockspeed
         int timetosend = (HH * 60) + MM;
@@ -446,6 +454,7 @@ void TransmitTime() {
 }
 #endif
 
+unsigned long timestamp = 0;
 
 
 void setup() 
@@ -466,6 +475,7 @@ void setup()
   #endif
 
   currentMillis = millis();
+  timestamp = millis();
 
   TFT_Begin();
     
