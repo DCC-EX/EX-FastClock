@@ -199,34 +199,6 @@ void SendTime(byte hour, byte mins, byte speed) {
 
 #endif
 
-void TimeCheck() {
-
-  HH = ((startTime + runTime) / milPerHr) ;
-
-    if (HH >= 24) 
-        {
-          HD = (HH / 24);
-          HH = (HH - (24 * HD)); 
-        }     
- 
-        
-      MM = ((startTime + runTime) % milPerHr) / milPerMin;
-
-    if (MM > 59) 
-        {
-          MH = (MM / 60);
-          MM = (MM - ( 60 * MH)); 
-        }
-
-  
-    message[0] = '0' + HH/10;
-    message[1] = '0' + HH%10;
-    message[2] = ':';
-    message[3] = '0' + MM/10;
-    message[4] = '0' + MM%10;
-    message[5] = 0;
-
-}
 
 void CheckClockTime() {
 
@@ -236,7 +208,7 @@ void CheckClockTime() {
   
     runTime = runTime + (clockSpeed * milPerSec);
       
-    TimeCheck();
+    Clock.TimeCheck();
     
   lastMillis = currentMillis;
 
@@ -256,78 +228,17 @@ void CheckClockTime() {
 
 void PauseClock() {
 
-tft.setFont();
-
-pausePlay = !pausePlay;
-
-//Serial.print("PausePlay = ");
-//Serial.println(pausePlay);
-
-if (pausePlay == true)                   //  Clock paused
-      {
-     
-        showmsgXY(55, 160, 2, YELLOW, "PAUSED");
-        tft.setFont();
-        key[0].initButton(&tft,  40, 220, 70, 40, WHITE, GREEN, WHITE, "Start", 2);
-        key[0].drawButton(false);
-      }   
-
-else  
-    {
-        tft.setFont();
-        tft.fillRect(1, 135, 235, 30, BLACK);
-        key[0].initButton(&tft,  40, 220, 70, 40, WHITE, CYAN, BLACK, "Pause", 2);
-        key[0].drawButton(false);
-    
-        #ifdef SEND_VIA_SERIAL
-          //SendTime(HH, MM, clockSpeed);
-        #endif  
-    }
 
 }
 
 void AdjustTime(byte OPT){
 
-   if (!pausePlay){
-     PauseClock();
-    }
-          // if runTime is > 2 minutes (120000 millis) adjust runTime if under 2 minutes startTime
-          //  Increment by 15 Min "a press"
-        switch (OPT) {
-          case 1:
-            if (runTime > 120000) {
-              runTime = runTime + 900000;
-            } else  {
-              startTime = startTime + 900000;
-            }
-            break;
-          case 2:
-            if (runTime > 120000)
-              {
-                runTime = runTime - 900000;
-              } else  {
-                startTime = startTime - 900000;
-              }
-            break;
-          default:
-            break;
-        }
-          
-    
-        TimeCheck();
-
-
-        printClock(message);
-
-          #ifdef SEND_VIA_SERIAL
-            //SendTime(HH, MM, clockSpeed);
-          #endif  
-
+   
 }
 
-void displaySpeed(byte x) {
+void displaySpeed(byte clockSpeed) {
 
-   clockSpeed = clockSpeeds[x];
+   //clockSpeed = clockSpeeds[x];
 
     strcpy(message, "Speed = ");
     if (clockSpeed < 10) {
@@ -346,79 +257,6 @@ void displaySpeed(byte x) {
 
 
 void AlterRate(){
-
-    if (!pausePlay){
-     PauseClock();
-    }
-
-    if (counter < 6)
-    {
-      counter++;
-    } else {
-      counter = 0;
-    }
-    displaySpeed(counter);
-
-    currentMillis = millis();
-
-}
-
-
-void ResetAll(){
-
-    if (!pausePlay){
-     PauseClock();
-    }
-
-    startTime = 21600000;              //  default start time 06:00  
-    counter = 2;                       //  initial clock speed 4:1
-    runTime = 0;                       //  Reset run time
-    LastMinutes = 99;
-
-    displaySpeed(counter);
-
-    CheckClockTime();           // display the time
-  
-
-}
-
-void SaveTime(){
-
-    if (!pausePlay){
-     PauseClock();
-    }
-
-    PauseTime.hour = HH;
-    PauseTime.minute = MM;
-    PauseTime.speed = counter;
-
-    int eeAddress = 0;
-
-    EEPROM.put(eeAddress, PauseTime);
-    tft.fillRect(1, 135, 235, 30, BLACK);
-    showmsgXY(55, 160, 2, YELLOW, "SAVED");
-
-}
-
-void GetSavedTime(){
-
-    int eeAddress = 0;
-    EEPROM.get(eeAddress, PauseTime);
-
-    // Check we have something valid from EEPROM
-    if (PauseTime.hour > 0 && PauseTime.hour < 25){
-      // we have a valid time so calculate start point
-        startTime = (PauseTime.hour * milPerHr) + (PauseTime.minute * milPerMin);
-        counter = PauseTime.speed;
-      }
-    else {
-      // not valid so set defaults.  Either first use or EEPROM corrupt
-        startTime = 21600000;           //  default start time 06:00
-        clockSpeed = 4;                 //  initial clock speed 4:1
-    
-    }
-
-    lastMillis = millis();          //  first reference reading of arduino O/S
 
 }
 

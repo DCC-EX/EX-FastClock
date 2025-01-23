@@ -31,7 +31,7 @@ byte clockSpeeds[] = {1, 2, 4, 6, 8, 12, 30};  //  Fast Clock Speeds
 
 // The following line sets the default (startup) speed.
 
-byte clockSpeed = 4;               //  Initial Fast Clock Speed Setting
+//byte clockSpeed = 4;               //  Initial Fast Clock Speed Setting
 
 // Define some colours for the display
 
@@ -50,28 +50,12 @@ byte clockSpeed = 4;               //  Initial Fast Clock Speed Setting
 char message[BUF_SIZE] = {"Hello!"};
 
 
-unsigned long currentMillis = 0;  //  Current Millis value for comparison
-unsigned long lastMillis = 0;     //  Last Millis for comparison
-unsigned long startTime = 0;      //  Milliseconds since 00:00.000 to Session Start Time
-unsigned long runTime = 0;        //  Milliseconds since Session Start Time
-
-// Constants
-const int milPerSec = 1000;       //  Milliseconds per Second
-unsigned long milPerMin = 60000;  //  Milliseconds per minute
-unsigned long milPerHr = 3600000; //  Milliseconds per Hour
-
 
 byte debounceDelay = 75;           //  the debounce time; increase if the output flickers
-byte counter = 2;                  //  for program logic
-bool pausePlay = false;            //  clock state - running or paused
 
-byte HH;                           //  Integer Hours
-byte MM;                           //  Integer Minutes
-byte HD;                           //  number of full Days since conting
-byte MH;                           //  number of full hours since conting
-byte SM;                           //  number of full minutes since conting 
 
-byte LastMinutes = 99;
+
+
 
 byte ButtonPressed = 0;
 
