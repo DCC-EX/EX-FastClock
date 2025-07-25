@@ -10,36 +10,45 @@
 #include <Fonts/Arial9pt7b.h>
 
 
-
-
 MCU_Display::MCU_Display(uint8_t rotation, const GFXfont *textFont, uint16_t textColour,
                                  uint16_t backgroundColour) {
+  _rotation = rotation;
+  _textSize = 1; // default text size to save amending display routine.
+  _textColour = textColour;
+  _backgroundColour = backgroundColour;
+  if (_tft == nullptr) {
+    //_tft = new MCUFRIEND_kbv tft;  // set up a tft instance with the MCUFRIEND drivers
 
+    _tft = new MCUFRIEND_kbv();
+
+  }
+  _gfxFont = textFont;
 }
+
 
 void MCU_Display::begin()
 {
 
-    uint16_t ID = tft.readID();
+    uint16_t ID = _tft->readID();
     // Serial.print("TFT ID = 0x");
     // Serial.println(ID, HEX);
     // Serial.println("Calibrate for your Touch Panel");
     if (ID == 0xD3D3) ID = 0x9486; // write-only shield
 
-    tft.begin(ID);
+    _tft->begin(ID);
   
-    tft.setRotation(0);           //PORTRAIT
+    _tft->setRotation(0);           //PORTRAIT
 
-    tft.fillScreen(BLACK);
-    showmsgXY(1, 15, 1, YELLOW, header);
-    tft.drawFastHLine(0, 18, tft.width(), WHITE);
+    _tft->fillScreen(BLACK);
+    MCU_Display::showmsgXY(1, 15, 1, YELLOW, header);
+    _tft->drawFastHLine(0, 18, _tft->width(), WHITE);
   
 
 }
 
 void MCU_Display::clearScreen()
 {
-    tft.fillScreen(BLACK);
+    _tft->fillScreen(BLACK);
 }
 
 
@@ -47,20 +56,20 @@ void MCU_Display::clearScreen()
 void MCU_Display::drawButtons()
 {
 
-    tft.setFont();  // Set the default font
+    _tft->setFont();  // Set the default font
 
     //Serial.println("Defining Buttons");
-    key[0].initButton(&tft,  40, 220, 70, 40, WHITE, GREEN, WHITE, "Start", 2);
+    key[0].initButton(_tft,  40, 220, 70, 40, WHITE, GREEN, WHITE, "Start", 2);
     
-    key[1].initButton(&tft,  120, 220, 70, 40, WHITE, RED, WHITE, "Save", 2);
+    key[1].initButton(_tft,  120, 220, 70, 40, WHITE, RED, WHITE, "Save", 2);
     
-    key[2].initButton(&tft,  200, 220, 70, 40, WHITE, CYAN, BLACK, "Reset", 2);
+    key[2].initButton(_tft,  200, 220, 70, 40, WHITE, CYAN, BLACK, "Reset", 2);
     
-    key[3].initButton(&tft,  40, 270, 70, 40, WHITE, CYAN, BLACK, "T+", 2);
+    key[3].initButton(_tft,  40, 270, 70, 40, WHITE, CYAN, BLACK, "T+", 2);
     
-    key[4].initButton(&tft,  120, 270, 70, 40, WHITE, CYAN, BLACK, "T-", 2);
+    key[4].initButton(_tft,  120, 270, 70, 40, WHITE, CYAN, BLACK, "T-", 2);
     
-    key[5].initButton(&tft,  200, 270, 70, 40, WHITE, CYAN, BLACK, "Rate", 2); 
+    key[5].initButton(_tft,  200, 270, 70, 40, WHITE, CYAN, BLACK, "Rate", 2); 
     
 
     for (byte x = 0; x < 6; x++) {
@@ -74,16 +83,16 @@ void MCU_Display::drawButtons()
 void MCU_Display::printClock(char *Msg)
 {
     
-    tft.setFont(&Arial48pt7b);
+    _tft->setFont(&Arial48pt7b);
     
-    tft.setTextColor(MAGENTA);
-    tft.setTextSize(1);
-    tft.fillRect(1, 30, 235, 90, BLACK);
-    tft.setCursor(1,100);
+    _tft->setTextColor(MAGENTA);
+    _tft->setTextSize(1);
+    _tft->fillRect(1, 30, 235, 90, BLACK);
+    _tft->setCursor(1,100);
     
-    tft.print(Msg);
+    _tft->print(Msg);
     
-    tft.drawFastHLine(0, 120, tft.width(), WHITE);
+    _tft->drawFastHLine(0, 120, _tft->width(), WHITE);
 
 }
 
@@ -91,12 +100,12 @@ void MCU_Display::printText(char *Msg)
 {
     //Serial.println(Msg);
 
-     tft.fillRect(1, 170, 318, 30, BLACK);
-     tft.setCursor(15, 170);
-    tft.setFont();
-    tft.setTextColor(YELLOW);
-    tft.setTextSize(2);
-    tft.print(Msg);
+    _tft->fillRect(1, 170, 318, 30, BLACK);
+    _tft->setCursor(15, 170);
+    _tft->setFont();
+    _tft->setTextColor(YELLOW);
+    _tft->setTextSize(2);
+    _tft->print(Msg);
     delay(10);
 }
 
@@ -115,7 +124,7 @@ void MCU_Display::displaySpeed(byte clockSpeed) {
       message[10] = 0;
     }
 
-    tft.fillRect(10, 170, 240, 22, BLACK);
+    _tft->fillRect(10, 170, 240, 22, BLACK);
     showmsgXY(10, 190, 1, YELLOW, message);
    
 }
@@ -123,12 +132,12 @@ void MCU_Display::displaySpeed(byte clockSpeed) {
 //void showmsgXY(byte x, byte y, byte sz, char colour, const char *msg)
 void MCU_Display::showmsgXY(byte x, byte y, byte sz, char colour, char *msg)
 {
-    tft.setFont();
-    tft.setFont(&Arial9pt7b);
-    tft.setCursor(x, y);
-    tft.setTextColor(colour);
-    tft.setTextSize(sz);
-    tft.print(msg);
+    _tft->setFont();
+    _tft->setFont(&Arial9pt7b);
+    _tft->setCursor(x, y);
+    _tft->setTextColor(colour);
+    _tft->setTextSize(sz);
+    _tft->print(msg);
     delay(10);
 }
 
@@ -136,7 +145,7 @@ void MCU_Display::showmsgXY(byte x, byte y, byte sz, char colour, char *msg)
 void MCU_Display::checkButtons()
 {
 
-    tft.setFont();
+    _tft->setFont();
 
     bool down = touchGetXY();
 
@@ -154,8 +163,6 @@ void MCU_Display::checkButtons()
 }
 
 
-}
-
 bool MCU_Display::touchGetXY(void)
 {
     TSPoint p = ts.getPoint();
@@ -165,8 +172,8 @@ bool MCU_Display::touchGetXY(void)
     digitalWrite(XM, HIGH);
     bool pressed = (p.z > MINPRESSURE && p.z < MAXPRESSURE);
     if (pressed) {
-        pixel_x = map(p.x, TS_LEFT, TS_RT, 0, tft.width()); //.kbv makes sense to me
-        pixel_y = map(p.y, TS_TOP, TS_BOT, 0, tft.height());
+        pixel_x = map(p.x, TS_LEFT, TS_RT, 0, _tft->width()); //.kbv makes sense to me
+        pixel_y = map(p.y, TS_TOP, TS_BOT, 0, _tft->height());
     }
     return pressed;
 }

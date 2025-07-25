@@ -6,11 +6,26 @@
 #include <Adafruit_GFX.h>
 #include <MCUFRIEND_kbv.h>
 #include <TouchScreen.h>
+#include <EX-Fast_Clock.h>
+
+
 #define MINPRESSURE 200
 #define MAXPRESSURE 1000
 
-MCUFRIEND_kbv tft;  // set up a tft instance with the MCUFRIEND drivers
+MCUFRIEND_kbv *_tft;  // set up a tft instance with the MCUFRIEND drivers
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
+
+// Define the operating buttons
+//Adafruit_GFX_Button btn1, btn2, btn3, btn4, btn5, btn6;
+Adafruit_GFX_Button key[6];
+
+int pixel_x, pixel_y;     //Touch_getXY() updates global vars
+
+// Global message buffers shared by Serial and Scrolling functions
+#define BUF_SIZE  15
+char message[BUF_SIZE] = {"Hello!"};
+
+
 
 class MCU_Display : public Display {
 public:
@@ -26,17 +41,17 @@ public:
   ~MCU_Display();
 
   /// @brief Perform any initial setup required
-  void begin() override;
+  void begin();
 
   /// @brief Clear the entire screen
-  void clearScreen();
+  void clearScreen(uint16_t backgroundColour);
+  
   void drawButtons();
-
   void printClock(char *Msg);
   void printText(char *Msg);
   void displaySpeed(byte clockSpeed);
 
-  // Add private members and methods as needed
+
   /// @brief Show a message at a specific x,y location
   /// @param x horizontal position
   /// @param y vertival position
@@ -50,6 +65,10 @@ public:
 private:
 
   bool touchGetXY(void);
+
+  static MCUFRIEND_kbv *_tft;
+  const GFXfont *_gfxFont;
+  static bool _tftInitialised;
 
 };
 

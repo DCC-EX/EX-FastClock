@@ -3,7 +3,10 @@
 
 
 #include <Arduino.h>
+#include <Clock.h>
 #include <EEPROM.h>
+#include <Defines.h>
+#include <Display.h>
 
 class Clock {
 public:
@@ -14,8 +17,12 @@ public:
   void resetAll();
   void alterRate();
   void adjustTime(byte OPT);
+  void checkClockTime();
   void getSavedTime();
   void saveTime();
+  void setClockMillis();
+
+   bool _pausePlay = false;            //  clock state - running or paused
 
 private:
 
@@ -24,13 +31,13 @@ private:
   unsigned long _startTime = 0;      //  Milliseconds since 00:00.000 to Session Start Time
   unsigned long _runTime = 0;        //  Milliseconds since Session Start Time
 
-  bool _pausePlay = false;            //  clock state - running or paused
+ 
   // Constants
   const int _milPerSec = 1000;       //  Milliseconds per Second
   unsigned long _milPerMin = 60000;  //  Milliseconds per minute
   unsigned long _milPerHr = 3600000; //  Milliseconds per Hour
   byte _clockSpeed;                  //  Fast Clock Speed Setting
-  byte _counter                       //  array counter
+  byte _counter;                      //  array counter
   byte _HH;                           //  Integer Hours
   byte _MM;                           //  Integer Minutes
   byte _HD;                           //  number of full Days since conting

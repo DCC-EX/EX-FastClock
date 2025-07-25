@@ -1,10 +1,12 @@
 
-
 #include "Clock.h"
+#include "Display.h"
+#include <MCU_Display.h>
 
 
 Clock::Clock() {
 
+   _currentMillis = millis();
 
 }
 
@@ -13,9 +15,10 @@ void Clock::setup() {
 }
 
 void Clock::pauseClock() {
-tft.setFont();
 
-_pausePlay = !_pausePlay;
+  _tft.setFont();
+
+  _pausePlay = !_pausePlay;
 
 //Serial.print("PausePlay = ");
 //Serial.println(pausePlay);
@@ -23,16 +26,16 @@ _pausePlay = !_pausePlay;
 if (_pausePlay == true)                   //  Clock paused
       {
      // ******* move this to display
-        showmsgXY(55, 160, 2, YELLOW, "PAUSED");
-        tft.setFont();
+        Display->showmsgXY(55, 160, 2, YELLOW, "PAUSED");
+        _tft->setFont();
         key[0].initButton(&tft,  40, 220, 70, 40, WHITE, GREEN, WHITE, "Start", 2);
         key[0].drawButton(false);
       }   
 
 else  
     {
-        tft.setFont();
-        tft.fillRect(1, 135, 235, 30, BLACK);
+        _tft->setFont();
+        _tft->fillRect(1, 135, 235, 30, BLACK);
         key[0].initButton(&tft,  40, 220, 70, 40, WHITE, CYAN, BLACK, "Pause", 2);
         key[0].drawButton(false);
     
@@ -45,7 +48,8 @@ else
 }
 
 void Clock::timeCheck() {
-_HH = ((_startTime + _runTime) / _milPerHr) ;
+  
+    _HH = ((_startTime + _runTime) / _milPerHr) ;
 
     if (_HH >= 24) 
         {
@@ -144,6 +148,32 @@ if (!_pausePlay){
 
 }
 
+void CheckClockTime() {
+
+//Serial.println("Clock Tick");
+
+  if (_currentMillis - _lastMillis >= _milPerSec) {  // cycle every second  
+  
+    _runTime = _runTime + (_clockSpeed * _milPerSec);
+      
+    Clock.TimeCheck();
+    
+    _lastMillis = _currentMillis;
+
+  if (_MM != _LastMinutes){
+    _LastMinutes = MM;
+
+    printClock(message);  
+
+    #ifdef SEND_VIA_SERIAL
+      SendTime(HH, MM, clockSpeed);
+    #endif  
+  }
+  
+  }
+
+}
+
 void Clock::getSavedTime() {
     int eeAddress = 0;
     EEPROM.get(eeAddress, _PauseTime);
@@ -177,8 +207,17 @@ void Clock::saveTime() {
     EEPROM.put(eeAddress, _PauseTime);
 
     // Put this into Display code
-    tft.fillRect(1, 135, 235, 30, BLACK);
-    showmsgXY(55, 160, 2, YELLOW, "SAVED");
+    _tft.fillRect(1, 135, 235, 30, BLACK);
+    Display.showmsgXY(55, 160, 2, YELLOW, "SAVED");
 
 
 }
+
+void setClockMillis() {
+
+   _currentMillis = millis();//  reset current millis to now
+  
+
+}
+
+

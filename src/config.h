@@ -16,6 +16,8 @@
 #define HDDR_SIZE  25
 char header[HDDR_SIZE] = {"Nantyderry Junction"};
 
+#define CLOCK_TYPE MCUFRIEND 
+//#define CLOCK_TYPE TFTESPI
 
 // ALL Touch panels and wiring is DIFFERENT.  The touch screen needs to be calibrated
 // See the README files for how to run the calibration routine and

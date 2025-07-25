@@ -2,8 +2,9 @@
 #define DISPLAY_H
 
 #include "Defines.h"
-#include "Display.h"
+
 #include <Arduino.h>
+#include <Adafruit_GFX.h>
 
 /// @brief This Display class is designed to be extended by other screen classes that define the methods to
 /// perform the requesite activities according to the library in use to drive the physical screen. This allows all
@@ -13,27 +14,35 @@
 class Display {
 public:
   /// @brief Constructor for a new Display instance
-  Display();
+  /// @param rotation Rotate the screen if necessary
+  /// @param textFont The identiy of the font for this display.
+  /// @param textColour Default 16bit text colour, refer to TFT_eSPI documentation for details
+  /// @param backgroundColour Fill the screen with this colour during setup
+  Display(uint8_t rotation, const GFXfont *textFont, uint16_t textColour,
+                                 uint16_t backgroundColour);
 
   /// @brief Virtual function to implement to setup the physical screen parameters
-  /// @param rotation Rotate the screen if necessary
-  /// @param textSize Pixel multiplier to increase text size if desired
-  /// @param backgroundColour Fill the screen with this colour during setup
-  void setupScreen(uint8_t rotation, uint8_t textSize, uint16_t backgroundColour);
+  
+  void begin();
 
   /// @brief Virtual function to implement to clear the entire screen
   /// @param backgroundColour Valid colour to set the entire screen to
   void clearScreen(uint16_t backgroundColour);
 
-  /// @brief Virtual function to implement to write a row of text to the physical screen
-  /// @param row Row on screen, 0 - 255 (not pixels)
-  /// @param column Column on screen, 0 - 255 (not pixels)
-  /// @param fontColour Valid colour for the text
-  /// @param backgroundColour Valid colour for the background
-  /// @param maxLength Maximum number of columns (not pixels) that can fit on the screen
-  /// @param message Char array containing the text to display
-  virtual void writeRow(uint8_t row, uint8_t column, uint16_t fontColour, uint16_t backgroundColour, uint8_t maxLength,
-                        char *message, bool underlined) = 0;
+  void drawButtons();
+  void printClock(char *Msg);
+  void printText(char *Msg);
+  void displaySpeed(byte clockSpeed);
+
+  /// @brief Show a message at a specific x,y location
+  /// @param x horizontal position
+  /// @param y vertival position
+  /// @param sz text size
+  /// @param colour the colour code
+  /// @param msg the message to be displayed
+  void showmsgXY(byte x, byte y, byte sz, char colour, char *msg);
+  void checkButtons();
+  void setCursor(int row, int col);
 
   /// @brief Get the physical screen height
   /// @return Screen height in pixels
@@ -46,6 +55,10 @@ public:
 protected:
   uint8_t _fontHeight;            // Calculated height of the font to determine row count
   uint8_t _fontWidth;             // Calculated width of the font to determine row length
+  uint16_t _textColour;
+  uint16_t _backgroundColour;
+  uint8_t _rotation = 0;
+  uint8_t _textSize = 1;
 
 };
 

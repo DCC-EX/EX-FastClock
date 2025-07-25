@@ -43,8 +43,23 @@
  */
 
 
+
+#if CLOCKTYPE == MCUFRIEND
+    #include "MCU_Display.h"
+    MCU_Display *Display = new MCU_Display(0, &Arial9pt7b, YELLOW, BLACK);
+    Serial.print "MCUFRIEND Display selected\n";
+    #endif
+#if CLOCKTYPE == TFTESPI
+    //#include "TFT_eSPI_Display.h"
+    //TFT_eSPI_Display *Display = new TFT_eSPI_Display(0, &Arial9pt7b, YELLOW, BLACK);  
+    Serial.print "TFT_eSPI Display selected\n";
+    #endif
+
 #include "EX-Fast_Clock.h"
 //#include "stdio.h"
+
+// Invoke a clock object
+Clock ThisClock;
 
 // only load the wire library if we transmit to CS
 #ifdef SEND_VIA_I2C
@@ -67,41 +82,6 @@ void SendTime(byte hour, byte mins, byte speed) {
 #endif
 
 
-void CheckClockTime() {
-
-//Serial.println("Clock Tick");
-
-  if (currentMillis - lastMillis >= milPerSec) {  // cycle every second  
-  
-    runTime = runTime + (clockSpeed * milPerSec);
-      
-    Clock.TimeCheck();
-    
-  lastMillis = currentMillis;
-
-  if (MM != LastMinutes){
-    LastMinutes = MM;
-
-    printClock(message);  
-
-    #ifdef SEND_VIA_SERIAL
-      SendTime(HH, MM, clockSpeed);
-    #endif  
-  }
-  
-  }
-
-}
-
-
-
-
-void PrintButton(){
-
-  //Serial.print("Button :");
-  //Serial.println(ButtonPressed);
-
-}
 
 #ifdef SEND_VIA_I2C
 void TransmitTime() {
@@ -121,6 +101,13 @@ void TransmitTime() {
 
 
 
+void PrintButton(){
+
+  //Serial.print("Button :");
+  //Serial.println(ButtonPressed);
+
+}
+
 void setup() 
 {
 
@@ -138,20 +125,23 @@ void setup()
     Wire.onRequest(TransmitTime);
   #endif
 
-  currentMillis = millis();
-
-  TFT_Begin();
-    
-  DrawButtons();
  
-  GetSavedTime();               // Read the EEPROM
 
-  displaySpeed(counter);
+  Display::begin();
+    
+  Display::drawButtons();
+ 
+  ThisClock.getSavedTime();               // Read the EEPROM
 
-  CheckClockTime();
+  Display::displaySpeed(counter);
 
-  pausePlay = true;
-  showmsgXY(50, 160, 2, YELLOW, "PAUSED");
+  ThisClock.checkClockTime();
+  
+
+  //_pausePlay = true;
+  ThisClock.pauseClock();                // Pause the clock to allow time to set
+
+  Display->showmsgXY(50, 160, 2, YELLOW, "PAUSED");
 
   //Serial.println("Setup Finished");
 
@@ -163,54 +153,52 @@ void setup()
 void loop() 
 {
   
-  if (pausePlay == false){
-    CheckClockTime();
+  if (ThisClock._pausePlay == false){
+    ThisClock.checkClockTime();
   }
 
-  CheckButtons();
-
-  
+  Display->checkButtons();
 
   switch (ButtonPressed){
       
     
 
     case 1:
-        PauseClock();
+        ThisClock.pauseClock();
         PrintButton();
 
       break;
         
     case 2:
-        SaveTime();
+        ThisClock.saveTime();
         PrintButton();
       break;
 
     case 3:
         
-        ResetAll();
+        ThisClock.resetAll();
         PrintButton();
       break;
 
     case 4:
-        AdjustTime(1); // add time
+        ThisClock.adjustTime(1); // add time
         PrintButton();
       break;
 
     case 5:
-        AdjustTime(2); // deduct time
+        ThisClock.adjustTime(2); // deduct time
         PrintButton();
       break;
 
     case 6:
-        AlterRate();
+        ThisClock.alterRate();
         PrintButton();
       break;
 
   }
     
     ButtonPressed = 0;
-    currentMillis = millis();
+    ThisClock.setClockMillis();
 
 
 }
