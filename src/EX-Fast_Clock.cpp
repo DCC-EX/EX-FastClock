@@ -60,8 +60,8 @@ TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
 #include <Fonts/Arial48pt7b.h>
 #include <Fonts/Arial9pt7b.h>
 
-//void showmsgXY(byte x, byte y, byte sz, char colour, const char *msg)
-void showmsgXY(byte x, byte y, byte sz, char colour, char *msg)
+//void showmsgXY(byte x, byte y, byte sz, uint16_t colour, const char *msg)
+void showmsgXY(byte x, byte y, byte sz, uint16_t colour, char *msg)
 {
     tft.setFont();
     tft.setFont(&Arial9pt7b);
